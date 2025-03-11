@@ -1,0 +1,50 @@
+{% extends 'home/index.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Mis Arriendos</h2>
+    {% if ordenes_con_items %}
+        {% for grupo in ordenes_con_items %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>Orden #{{ grupo.orden.id }}</strong> - Fecha: {{ grupo.orden.date_ordered|date:"d-m-Y H:i" }}
+                {% if grupo.orden.complete %}
+                <span class="badge bg-success">Completado</span>
+                {% else %}
+                <span class="badge bg-warning">Pendiente</span>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Término</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in grupo.items %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.idProducto.nombre }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>{{ item.fecha_inicio }}</td>
+                            <td>{{ item.fecha_termino }}</td>
+                            <td>${{ item.get_total }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <p class="text-center">No tienes órdenes registradas.</p>
+    {% endif %}
+</div>
+{% endblock %}

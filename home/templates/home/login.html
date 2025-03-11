@@ -1,0 +1,28 @@
+{% extends 'home/index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="formularioLogin">
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+            <div class="container loginBtn">
+                <button type="submit" class="btn btn-warning btn-lg tn-block">Login</button>
+            </div>
+        </form>
+     
+       <h5 class="text-center">Si lo prefieres, puedes ingresar con</h5>
+        <div class="container">
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="googleBtn">
+                <img src="{%static 'home/img/GoogleIcon.png'%}" alt="Google Logo">
+                Google
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

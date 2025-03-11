@@ -1,0 +1,25 @@
+{% extends 'home/index.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/faq.css' %}">
+
+<div class="faq-container">
+    <h1>Preguntas Frecuentes</h1>
+    <div class="faq-list">
+        {% for faq in faqs %}
+        <div class="faq-item">
+            <button class="faq-question" onclick="toggleAnswer(this)">
+                {{ faq.pregunta }}
+            </button>
+            <div class="faq-answer">
+                <p>{{ faq.respuesta }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{% static 'home/js/faq.js' %}"></script>
+
+{% endblock %}

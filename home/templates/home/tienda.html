@@ -1,0 +1,326 @@
+{% extends 'home/index.html' %} {% load static %} {%block content%} {%load humanize%}
+<!--Ruta de navegacion de productos-->
+
+<div class="container">
+    <!--Banner de descuento-->
+    <div class="ban">
+        <img  class="d-block w-100" src="{%static 'home/img/MAQUINA6.png'%}">
+    </div>
+    <div class="filtros">
+        <!--Filtros de productos por categorías-->
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="filtros">
+                <h4 class="my-4">Refinar Búsqueda</h4>
+                <div class="list-group">
+                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#marcaModal">Marca
+                        <span>></span>
+                    </a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="marcaModal" tabindex="-1" aria-labelledby="marcaModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="marcaModalLabel">Seleccionar Marca</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form method="post">
+                                    <input type="hidden" name="form_id" value="formulario_marca">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        {{ formFiltros}}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button submit" class="btn btn-primary" id="filtrarMarcas">Filtrar</button>
+                                    </div>
+                                </form>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        // Load checked marcas from session storage
+                                        let storedMarcas = JSON.parse(sessionStorage.getItem('marcas')) || [];
+                                        document.querySelectorAll('.marca-checkbox').forEach(function(checkbox) {
+                                            if (storedMarcas.includes(checkbox.value)) {
+                                                checkbox.checked = true;
+                                            }
+                                        });
+
+                                        // Add event listener to the Filtrar button
+                                        document.getElementById('filtrarMarcas').addEventListener('click', function() {
+                                            let selectedMarcas = [];
+                                            document.querySelectorAll('.marca-checkbox:checked').forEach(function(checkbox) {
+                                                selectedMarcas.push(checkbox.value);
+                                            });
+                                            sessionStorage.setItem('marcas', JSON.stringify(selectedMarcas));
+                                            // Optionally, you can trigger a form submission or AJAX request here
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#arrendadorModal">
+                        Arrendador
+                        <span>></span>
+                    </a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="arrendadorModal" tabindex="-1" aria-labelledby="arrendadorModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="arrendadorModalLabel">Seleccionar Arrendador</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form method="post">
+                                    <input type="hidden" name="form_id" value="formulario_arrendador">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        {{ formArrendador }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button submit" class="btn btn-primary" id="filtrarArrendadores">Filtrar</button>
+                                    </div>
+                                </form>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        // Load checked marcas from session storage
+                                        let storedMarcas = JSON.parse(sessionStorage.getItem('arrendador')) || [];
+                                        document.querySelectorAll('.arrendador-checkbox').forEach(function(checkbox) {
+                                            if (storedMarcas.includes(checkbox.value)) {
+                                                checkbox.checked = true;
+                                            }
+                                        });
+
+                                        // Add event listener to the Filtrar button
+                                        document.getElementById('filtrarArrendadores').addEventListener('click', function() {
+                                            let selectedMarcas = [];
+                                            document.querySelectorAll('.arrendador-checkbox:checked').forEach(function(checkbox) {
+                                                selectedMarcas.push(checkbox.value);
+                                            });
+                                            sessionStorage.setItem('arrendador', JSON.stringify(selectedMarcas));
+                                            // Optionally, you can trigger a form submission or AJAX request here
+                                        });
+                                    });
+                                </script>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#precioModal">
+                        Precio
+                        <span>></span>
+                    </a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="precioModal" tabindex="-1" aria-labelledby="precioModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="precioModalLabel">Seleccionar Rango de Precio</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form method="post">
+                                    <input type="hidden" name="form_id" value="formulario_precio">
+                                    <div class="modal-body">
+                                        {% csrf_token %}
+                                            {{filtroPrecios}}
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="submit" class="btn btn-primary" id="filtrarPrecio">Filtrar</button>
+                                    </div>
+                                </form>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        // Load checked marcas from session storage
+                                        let storedPrecio = JSON.parse(sessionStorage.getItem('precio')) || {};
+                                        document.getElementById('precioMin').value = storedPrecio.precioMin || '';
+                                        document.getElementById('precioMax').value = storedPrecio.precioMax || '';
+
+                                        // Add event listener to the Filtrar button
+                                        document.getElementById('filtrarPrecio').addEventListener('click', function() {
+                                            let selectedPrecio = {
+                                                precioMin: document.getElementById('precioMin').value,
+                                                precioMax: document.getElementById('precioMax').value
+                                            };
+                                            sessionStorage.setItem('precio', JSON.stringify(selectedPrecio));
+                                            // Optionally, you can trigger a form submission or AJAX request here
+                                        });
+                                    });
+                                </script>
+
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#regionModal">
+                        Región
+                        <span>></span>
+                    </a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="regionModal" tabindex="-1" aria-labelledby="regionModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="regionModalLabel">Seleccionar Región</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="" method="post">
+                                    <input type="hidden" name="form_id" value="formulario_region">
+                                    {% csrf_token %}
+                                    <div class="modal-body">
+                                        <ul class="list-group">
+                                            {{ filtroRegiones }}
+                                        </ul>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button submit" class="btn btn-primary" id="filtrarRegiones">Filtrar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#combustibleModal">
+                        Combustible
+                        <span>></span>
+                    </a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="combustibleModal" tabindex="-1" aria-labelledby="combustibleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="combustibleModalLabel">Seleccionar Tipo de Combustible</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form action="" method="post">
+                                    <div class="modal-body">
+                                        {{ filtroCombustibles }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button submit" class="btn btn-primary" id="filtrarCombustibles">Filtrar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="list-group-item d-flex justify-content-between align-items-center" data-bs-toggle="modal" data-bs-target="#disponibilidadModal">
+                        Disoponibilidad
+                        <span>></span>
+                    </a>
+                <!-- Modal -->
+                <div class="modal fade" id="disponibilidadModal" tabindex="-1" aria-labelledby="disponibilidadModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="disponibilidadModalLabel">Seleccionar Disponibilidad</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="post">
+                                    <input type="hidden" name="form_id" value="formulario_disponibilidad">
+                                    {{ formDisponibilidad }}
+                                    {% csrf_token %}
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            flatpickr("#fechaRango", {
+                                                mode: "range",
+                                                dateFormat: "Y-m-d"
+                                            });
+                                        });
+                                    </script>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <button type="button submit" class="btn btn-primary" id="filtrarDisponibilidad">Filtrar</button>
+                                    </div>
+                                </form>
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        // Load selected dates from session storage
+                                        let storedDisponibilidad = JSON.parse(sessionStorage.getItem('disponibilidad')) || {};
+                                        document.getElementById('fechaInicio').value = storedDisponibilidad.fechaInicio || '';
+                                        document.getElementById('fechaFin').value = storedDisponibilidad.fechaFin || '';
+
+                                        // Add event listener to the Filtrar button
+                                        document.getElementById('filtrarDisponibilidad').addEventListener('click', function() {
+                                            let selectedDisponibilidad = {
+                                                fechaInicio: document.getElementById('fechaInicio').value,
+                                                fechaFin: document.getElementById('fechaFin').value
+                                            };
+                                            sessionStorage.setItem('disponibilidad', JSON.stringify(selectedDisponibilidad));
+                                            // Optionally, you can trigger a form submission or AJAX request here
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-10">
+            <div class="row">
+                {% if productos %}
+                {% for producto in productos %}
+                <div class="col-lg-4 mb-4">
+                    <div class="box-element product">
+                        <div class="card-body" style="height: 100%;">
+                            {% if producto.imagen and producto.imagen.imagen %}
+                                <a data-producto="{{producto.VIN}}" href="{% url 'producto' VIN=producto.VIN %}">
+                                    <img src="{{producto.imagen.imagen.url}}" class="card-img-top" alt="..." style="width: 100%; height: 200px; object-fit: cover;" onerror="this.onerror=null;this.src='{% static 'home/img/contenido-no-disponible.jpg' %}';">
+                                </a>
+                            {% else %}
+                                <a data-producto="{{producto.VIN}}" href="{% url 'producto' VIN=producto.VIN %}">
+                                    <img src="{% static 'home/img/contenido-no-disponible.jpg' %}" class="card-img-top" alt="contenido no disponible" style="width: 100%; height: 200px; object-fit: cover;">
+                                </a>
+                            {% endif %}
+                            <h6 class="card-title product-brand">{{producto.marca}}</h6>
+                            <h5 class="card-title text-center product-name">{{producto.nombre}}</h5>
+                            <h5 class="product-price">${{producto.precio|intcomma}}</h5>
+                            <p class="card-text">Por {{producto.vendedor}}</p>
+                            {% if producto.descuento %}
+                            <p class="card-text"><s>${{producto.precioAnterior}}</s></p>
+                            <p class="card-text">Descuento: {{producto.descuento}}%</p>
+                            {% endif %}
+                            <p class="card-text">Envío: {{producto.tipoEnvio}}</p>
+                            {% if producto.costoEnvio %}
+                            <p class="card-text">Costo de Envío: ${{producto.costoEnvio|intcomma}}</p>
+                            {% endif %}
+                            {% if producto.ubicacion %}
+                            <p class="card-text">Ubicación: {{producto.ubicacion}}</p>
+                            {% endif %}
+                            <!--{% csrf_token %}
+                            <div class="d-grid gap-2 col-20 mx-auto">
+                                <button 
+                                    data-producto="{{producto.VIN}}" 
+                                    data-action="add" 
+                                    data-usuario="{{request.user}}" 
+                                    data-vendedor="{{producto.vendedor}}" 
+                                    data-envio="{{producto.costoEnvio|intcomma}}" 
+                                    data-url="{% url 'add_to_cart' %}"
+                                    class="btn btn-warning btn-lg btn-block editar-carrito"
+                                    visibility="hidden">
+                                    Agregar al Carro
+                                </button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+{% endblock %}

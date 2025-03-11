@@ -1,0 +1,37 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group img {
+    margin-bottom: 0.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-top: 1rem;
+}
+
+input[type="file"] {
+    display: block;
+    margin-top: 0.5rem;
+}
+
+select {
+    width: 100%;
+    box-sizing: border-box;
+}

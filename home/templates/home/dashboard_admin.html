@@ -1,0 +1,259 @@
+{% extends 'home/index.html' %}
+{% load static %}
+{% load mathfilters %}
+{% load humanize %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2>Bienvenido</h2>
+    <h5>MachineTrek Admin Dashboard</h5>
+    <div class="dashboard-summary">
+        <p><strong>Ingresos Totales:</strong> CLP ${{ total_ganancias|intcomma }}</p>
+        <p><strong>Total de Productos:</strong> {{ total_productos }}</p>
+        <p><strong>Total de Arriendos:</strong> {{ total_arriendos }}</p>
+    </div>
+
+    <div class="dashboard-section">
+        <h2>Ingresos Totales por Periodo</h2>
+        <ul>
+            <li><strong>Ingresos en la última semana:</strong> CLP ${{ ingresos_1_semana|intcomma }}</li>
+            <li><strong>Ingresos en los últimos 15 días:</strong> CLP ${{ ingresos_15_dias|intcomma }}</li>
+            <li><strong>Ingresos en el último mes:</strong> CLP ${{ ingresos_1_mes|intcomma }}</li>
+            <li><strong>Ingresos en el último año:</strong> CLP ${{ ingresos_1_anio|intcomma }}</li>
+        </ul>
+    </div>
+
+    <div class="dashboard-section">
+        <h2>Ingresos por Periodo</h2>
+        <canvas id="ingresosChart" width="300" height="100"></canvas>
+    </div>
+
+    <div class="dashboard-section">
+        <h2>Ganancias por Maquinaria (Arriendos)</h2>
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Maquinaria</th>
+                    <th>Total Ganancias</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in ganancias_por_maquinaria %}
+                    <tr>
+                        <td>{{ item.producto_nombre }}</td>
+                        <td>CLP ${{ item.ganancias|intcomma }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No hay ganancias registradas en este periodo.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="dashboard-section">
+        <h2>Tasa de Utilización (%)</h2>
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Maquinaria</th>
+                    <th>Tasa de Utilización</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in tasa_utilizacion %}
+                    <tr>
+                        <td>{{ item.idProducto__nombre }}</td>
+                        <td>{{ item.porcentaje|floatformat:2 }}%</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No hay productos registrados para calcular la tasa de utilización.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="dashboard-section row">
+        <div class="col-6">
+            <h2>Gráfico  Top 5 arrendadores (%)</h2>
+            <canvas id="tasaUtilizacionChart"></canvas>
+        </div>
+        <div class="col-6">
+            <h2>Gráfico Maquinaria Arrendada</h2>
+            <canvas id="maquinariaArrendadaChart" width="100" height="100"></canvas>
+        </div>
+    </div>
+    <div class="dashboard-section">
+        <h2>Maquinaria Arrendada</h2>
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th>Maquinaria</th>
+                    <th>Cantidad de Arriendos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in maquinaria_arriendada %}
+                    <tr>
+                        <td>{{ item.idProducto__nombre }}</td>
+                        <td>{{ item.cantidad }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="2">No hay maquinaria arrendada en este periodo.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Grafico de Ingresos por Periodo
+    var ctxIngresos = document.getElementById('ingresosChart').getContext('2d');
+    var ingresosChart = new Chart(ctxIngresos, {
+        type: 'bar',
+        data: {
+            labels: ['Última Semana', 'Últimos 15 Días', 'Último Mes', 'Último Año'],
+            datasets: [{
+                label: 'Ingresos (CLP)',
+                data: [
+                    {{ ingresos_1_semana|floatformat:0 }},
+                    {{ ingresos_15_dias|floatformat:0 }},
+                    {{ ingresos_1_mes|floatformat:0 }},
+                    {{ ingresos_1_anio|floatformat:0 }}
+                ],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                   'rgba(255, 206, 86, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // grafico de Tasa de Utilización
+    var ctxTasaUtilizacion = document.getElementById('tasaUtilizacionChart').getContext('2d');
+    var tasaUtilizacionChart = new Chart(ctxTasaUtilizacion, {
+        type: 'pie',
+        data: {
+            labels: [{% for item in top_arrendadores %}'{{ item.idProducto__vendedor__username }}',{% endfor %}],
+            datasets: [{
+                label: 'Tasa de Arriendo top Arrendatarios (%)',
+                data: [{% for item in top_arrendadores %}{{ item.porcentaje|floatformat:2 }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        }
+    });
+
+    // Gráfico de Maquinaria Arrendada
+    var ctxMaquinariaArrendada = document.getElementById('maquinariaArrendadaChart').getContext('2d');
+    var maquinariaArrendadaChart = new Chart(ctxMaquinariaArrendada, {
+        type: 'bar',
+        data: {
+            labels: [{% for item in maquinaria_arriendada %}'{{ item.idProducto__nombre }}',{% endfor %}],
+            datasets: [{
+                label: 'Cantidad de Arriendos',
+                data: [{% for item in maquinaria_arriendada %}{{ item.cantidad }},{% endfor %}],
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

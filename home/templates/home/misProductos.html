@@ -1,0 +1,270 @@
+{% extends 'home/index.html' %} {% load static %} {%block content%} {%load humanize%}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/form_add_prod.css' %}">
+<!-- se muestran los productos cargados por el usuario-->
+
+
+
+<div class="container">
+    <!--Banner de descuento-->
+    
+    <div class="filtros">
+        <!--Filtros de productos por categorías-->
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+        <div class="filtrosBusqueda">
+            <!--Formulario de filtros de busqueda-->
+
+        </div>
+        <div class="d-grid gap-2 col-20 mx-auto sticky-top">
+            <button class="btn btn-warning btn-lg tn-block add-button  sticky-top" data-bs-toggle="modal" data-bs-target="#modalAgregarProducto">Agregar Producto</button>
+        </div>
+        <div class="modal fade" id="modalAgregarProducto" tabindex="-1" aria-labelledby="modalAgregarProductoLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalAgregarProductoLabel">Agregar Producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form method="POST" action="{%url 'misProductos'%}" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        
+                            {% csrf_token %}
+                            {{ form.as_p }}
+
+                            <h3>Disponibilidad del Producto</h3>
+                            {{ disponibilidad_formset.management_form }}
+                            <div class="form-container" id="form-container">
+                                {% for form in disponibilidad_formset %}
+                                <div class="form-group">
+                                    {{ form.rango_fecha.label_tag }}  <!-- Etiqueta para el campo rango_fecha -->
+                                    {{ form.rango_fecha }}  <!-- Campo de rango_fecha -->
+                                    {{ form.non_field_errors }}  <!-- Errores no asociados a un campo en particular -->
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <script>
+                                flatpickr("#id_rango_fecha", {
+                                      mode: "range",  // Modo de selección de rango de fechas
+                                      dateFormat: "Y-m-d",  // Formato de la fecha
+                                      inline: true,  // Mostrar el calendario en línea (sin necesidad de hacer clic en el campo)
+                                      minDate: "today",  // No permitir seleccionar fechas pasadas
+                                      "locale": {
+                                          "firstDayOfWeek": 1 // Mostrar lunes como el primer día de la semana
+                                      },
+                                      onChange: function(selectedDates) {
+                                          // Acción después de seleccionar las fechas
+                                          console.log("Fechas seleccionadas: ", selectedDates);
+                                      }
+                                  });
+                            </script>
+                            <button type="button" class="btn btn-secondary" id="addDateRange">Agregar otro rango de fecha</button>
+                            <style>
+                                #id_rango_fecha {
+                                    display: none;
+                                }
+                            </style>
+
+                            <script>
+                                document.getElementById("addDateRange").addEventListener("click", function() {
+                                    const formContainer = document.getElementById("form-container");
+                                    const newFormGroup = document.createElement("div");
+                                    newFormGroup.classList.add("form-group");
+
+                                    const newLabel = document.createElement("label");
+                                    newLabel.innerHTML = "Rango de Fecha:";
+                                    newFormGroup.appendChild(newLabel);
+
+                                    const newInput = document.createElement("input");
+                                    newInput.type = "text";
+                                    newInput.classList.add("form-control");
+                                    newInput.name = "rango_fecha";
+                                    newInput.id = "id_rango_fecha_" + (formContainer.children.length + 1);
+                                    newFormGroup.appendChild(newInput);
+                                    //ocultar casilla
+                                    newInput.style.display = "none";
+
+                                    formContainer.appendChild(newFormGroup);
+
+                                    flatpickr(newInput, {
+                                        mode: "range",
+                                        dateFormat: "Y-m-d",
+                                        inline: true,
+                                        minDate: "today",
+                                        "locale": {
+                                            "firstDayOfWeek": 1
+                                        },
+                                        onChange: function(selectedDates) {
+                                            console.log("Fechas seleccionadas: ", selectedDates);
+                                        }
+                                    });
+                                });
+                            </script>
+
+                            <h3>Imágenes del Producto</h3>
+                            {{ imagen_formset.management_form }}
+                            <div class="form-container">
+                                {% for form in imagen_formset %}
+                                <div class="form-group">
+                                    {{ form.as_p }}
+                                </div>
+                                {% endfor %}
+                            </div>                        
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button-group"> 
+                            <button type="button" class="btn btn-warning btn-lg tn-blockSadd-button" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-warning btn-lg tn-blockSadd-button" id="agregarProductoBtn">Agregar</button>
+                        </div>
+                    <script>
+                        document.getElementById("agregarProductoBtn").addEventListener("click", function() {
+                            Swal.fire({
+                                title: 'Agregando producto',
+                                text: 'Por favor, espere...',
+                                allowOutsideClick: false,
+                                didOpen: () => {
+                                    Swal.showLoading();
+                                }
+                            });
+                        });
+                    </script>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            {% if productos %}
+            {% for producto in productos %}
+            <div class="col-lg-4 mb-4">
+                <div class="box-element product">
+                    <div class="card-body">
+                        <a data-producto="{{producto.VIN}}" href="{% url 'producto' VIN=producto.VIN %}"><img src="{{producto.imagen.imagen.url}}" class="card-img-top" alt="..."></a>
+                        <h6 class="card-title product-brand">{{producto.marca}}</h6>
+                        <h5 class="card-title text-center product-name">{{producto.nombre}}</h5>
+                        <h5 class="product-price">${{producto.precio|intcomma}}</h5>
+                        <p class="card-text">Por {{producto.vendedor}}</p>
+                        {% if producto.descuento %}
+                        <p class="card-text"></p><s>${{producto.precioAnterior}}</s></p>
+                        <p class="card-text"></p> Descuento: {{producto.descuento}}%</p>
+                        {% endif %}
+                        <p class="card-text"></p>Envío: {{producto.tipoEnvio}}</p>
+                        {% if producto.costoEnvio %}
+                        <p class="card-text"></p>Costo de Envío: ${{producto.costoEnvio|intcomma}}</p>
+                        {% endif %}
+                        {% if producto.ubicacion %}
+                        <p class="card-text"></p>Ubicación: {{producto.ubicacion}}</p>
+                        {% endif %}
+                        {% csrf_token %}
+                        <div class="d-grid gap-2 col-20 mx-auto">
+                            <button class="btn btn-warning btn-lg tn-block" id="EditarProducto" data-bs-toggle="modal" data-bs-target="#modalModificarProducto" data-nombre="{{producto.nombre}}" 
+                            data-precio="{{producto.precio}}" 
+                            data-marca="{{producto.marca}}" 
+                            data-costoenvio="{{producto.costoEnvio}}">Editar</button>
+                            <button class="btn btn-warning btn-lg tn-blockSadd-button eliminarBtn" id="EliminarProducto" data-bs-toggle="modal" data-producto="{{producto.VIN}}" data-bs-target="#modalEliminarProducto">Eliminar</button>
+                        </div>
+
+                        <div class="modal fade" id="modalModificarProducto" tabindex="-1" aria-labelledby="modalModificarProductoLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalModificarProductoLabel">Modificar Producto</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="formModificarProducto">
+                                            <label for="nombre">Nombre:</label> 
+                                            <input type="text" id="nombre" name="nombre" class="form-control" value="{{producto.nombre}}"> 
+                                            <label for="precio">Precio:</label> 
+                                            <input type="text" id="precio" name="precio" class="form-control" value="{{producto.precio}}">
+                                            <label for="descripcion">Descripcion:</label> 
+                                            <input type="text" id="descripcion" name="descripcion" class="form-control" value="{{producto.descripcion}}">
+                                            <label for="tipoEnvio">Envio:</label>
+                                            <select id="tipoEnvio" name="tipoEnvio" class="form-control">
+                                                <option value="GRATIS">RETIRO</option>
+                                                <option value="PAGO">FLETE</option>
+                                                <option value="PAGO">GRATIS</option>
+                                            </select>
+                                            <label for="cde">Costo de Envio</label> 
+                                            <input type="text" id="cde" name="cde" class="form-control" value="{{producto.costoEnvio}}">
+                                            <label for="imagen">Imagen:</label> 
+                                            <input type="file" id="imagen" name="imagen" class="form-control">
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning btn-lg tn-block add-button " data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="submit" form="formModificarProducto" class="btn btn-warning btn-lg tn-block add-button ">Guardar cambios</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal fade" id="modalEliminarProducto" tabindex="-1" aria-labelledby="modalEliminarProductoLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="modalEliminarProductoLabel">Eliminar Producto</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p class="modal-body-text">¿Estás seguro de que deseas eliminar este producto? <span id="productoValor"></span></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning btn-lg tn-block" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-warning btn-lg tn-block " ><a id="confirmarEliminarProducto"class="eliminar-producto" >ELIMINAR</a></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            
+       
+        {% endfor %}
+
+        {% else %}
+
+            
+        </div>
+
+    </div>
+    <script src="{% static 'home/js/form_check.js' %}"></script>
+    <script src="{% static 'home/js/script.js' %}"></script>
+    <script>
+        // ESTE CODIGO ES PARA ABRIR EL MODAL
+        const editarBoton = document.getElementById("EditarProducto");
+        const eliminarBoton = document.getElementById("EliminarProducto");
+        const agregarProductoBtn = document.getElementById("agregarProductoBtn");
+        const modal = new bootstrap.Modal(document.getElementById("modalModificarProducto")); 
+        const modalAgregarProducto = new bootstrap.Modal(document.getElementById("modalAgregarProducto"));
+        const modalEliminar = new bootstrap.Modal(document.getElementById("modalEliminarProducto"));
+        editarBoton.addEventListener("click", () => {
+            modal.show();
+        });
+        eliminarBoton.addEventListener("click", () => {
+        modalEliminar.show();
+    });
+
+        const confirmarEliminarBoton = document.getElementById("confirmarEliminarProducto");
+        confirmarEliminarBoton.addEventListener("click", () => {
+        modalEliminar.hide();
+    });
+    agregarProductoBtn.addEventListener("click", () => {
+        modalAgregarProducto.hide();
+    });
+
+    
+    </script>
+
+<h1>No hay productos cargados</h1>
+
+{% endif %}
+
+{% endblock %}

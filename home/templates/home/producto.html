@@ -1,0 +1,117 @@
+{% extends 'home/index.html' %} {% load static %} {%block content%} {% load humanize %}
+<div class="product-details-container">
+  
+    {% if producto %}
+    <div class="product-card">
+      <div class="carousel-container">
+        <div id="carouselExampleControls-{{ producto.id }}" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              {% if producto.imagen.imagen.url == "" or producto.imagen.imagen.url == None %}
+              <img src="{{producto.imagen.imagenURL}}" class="d-block w-100" alt="Imagen 1">
+              {% else %}
+              <img src="{{producto.imagen.imagen.url}}"  class="d-block w-100" alt="Imagen 1" onerror="this.onerror=null;this.src='{% static 'home/img/contenido-no-disponible.jpg' %}';">
+              {% endif %}
+            </div>
+            <div class="carousel-item">
+              <img src="{% static 'home/img/MAK10.jpg' %}" class="d-block w-100" alt="Imagen 2">
+            </div>
+            <div class="carousel-item">
+              <img src="{% static 'home/img/MAK10.jpg' %}" class="d-block w-100" alt="Imagen 3">
+            </div>
+            <div class="carousel-item">
+              <img src="{% static 'home/img/MAK10.jpg' %}" class="d-block w-100" alt="Imagen 4">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls-{{ producto.id }}" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls-{{ producto.id }}" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+        </div>
+      </div>
+      <div class="product-details">
+        <div class="text-container">
+          <h3>Nombre del Producto: <span class="product-name">{{ producto.nombre }}</span></h3>
+          <p>Marca: <span class="product-brand">{{ producto.marca }}</span></p>
+          <p class="product-price">Precio: $ {{ producto.precio|intcomma}}</p>
+          <p>Descripción: <span class="product-description">{{ producto.descripcion}}</span></p>
+        </div>
+      </div>
+      <container>
+        {{ disponibilidadForm.as_p }}
+        <button data-producto="{{producto.VIN}}" data-action="add" data-usuario="{{request.user}}" class="btn btn-warning btn-lg tn-block add-button editar-carrito" id="AgregarCarrito">Agregar al Carro</button>
+      </container>
+    </div>
+  </div>
+    
+  {% endif %}
+    
+    
+    <script>
+      // Pasar las disponibilidades desde el servidor a JavaScript
+      var disponibilidades = {{ rangos_disponibles|safe }};
+      var rango_bloqueadas = {{ rango_bloqueadas|safe }};
+      var rango_bloqueadasUsuario = {{ rango_bloqueadasUsuario|safe }};
+
+      console.log("Disponibilidades: ", disponibilidades);
+      console.log("Rangos bloqueadas: ", rango_bloqueadas);
+      console.log("Rangos bloqueadas por usuario: ", rango_bloqueadasUsuario);
+  
+      // Función para habilitar solo los rangos de fechas disponibles
+      function habilitarFechas(date) {
+          return disponibilidades.some(function(rango) {
+              var fechaInicio = new Date(rango.inicio);
+              var fechaFin = new Date(rango.fin);
+              return date >= fechaInicio && date <= fechaFin;
+          });
+      }
+
+      function bloquearFechas(date) {
+          return rango_bloqueadas.some(function(rango) {
+              var fechaInicio = new Date(rango.inicio);
+              var fechaFin = new Date(rango.fin);
+              return date >= fechaInicio && date <= fechaFin;
+          });
+      }
+
+      function bloquearFechasUsuario(date) {
+          return rango_bloqueadasUsuario.some(function(rango) {
+          var fechaInicio = new Date(rango.inicio);
+          var fechaFin = new Date(rango.fin);
+          // Bloquear también la fecha de fin
+          fechaFin.setDate(fechaFin.getDate() + 1);
+          return date >= fechaInicio && date < fechaFin;
+          });
+      }
+  
+      // Inicialización de flatpickr con selección de rango de fechas
+      flatpickr("#id_rango_fecha", {
+          mode: "range",  // Modo de selección de rango de fechas
+          dateFormat: "Y-m-d",  // Formato de la fecha
+          enable: [
+              function(date) {
+                  // Solo permitir fechas dentro de los rangos disponibles
+                  return habilitarFechas(date) && !bloquearFechas(date) && !bloquearFechasUsuario(date);
+              }
+          ],
+          inline: true,  // Mostrar el calendario en línea (sin necesidad de hacer clic en el campo)
+          minDate: "today",  // No permitir seleccionar fechas pasadas
+          "locale": {
+              "firstDayOfWeek": 1 // Mostrar lunes como el primer día de la semana
+          },
+          onChange: function(selectedDates) {
+              // Acción después de seleccionar las fechas
+              console.log("Fechas seleccionadas: ", selectedDates);
+          }
+      });
+  </script>
+  
+  </div>
+
+{% endblock %}
+
+

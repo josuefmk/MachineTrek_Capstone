@@ -1,0 +1,44 @@
+{% extends 'home/index.html' %}
+{% load static %}
+{% block content %}
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h2 class="profile-title">Mi Perfil</h2>
+        <a href="{% url 'actualizar_perfil' %}" class="btn btn-warning">Editar Perfil</a>
+    </div>
+    
+    <div class="profile-details">
+        <div class="profile-item">
+            <strong>Usuario:</strong>
+            <span>{{ user.username }}</span>
+        </div>
+        <div class="profile-item">
+            <strong>Nombre:</strong>
+            <span>{{ user.first_name }} {{ user.last_name }}</span>
+        </div>
+        <div class="profile-item">
+            <strong>Email:</strong>
+            <span>{{ user.email }}</span>
+        </div>
+        <div class="profile-item">
+            <strong>Dirección:</strong>
+            {% if user.perfil.direcciones.exists %}
+                <ul>
+                    {% for direccion in user.perfil.direcciones.all %}
+                        <li>{{ direccion }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <span>No hay direcciones disponibles.</span>
+            {% endif %}
+        </div>
+        
+        <div class="profile-item">
+            <strong>RUT:</strong>
+            <span>{{ user.perfil.rut }}</span>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

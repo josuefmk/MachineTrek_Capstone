@@ -1,0 +1,112 @@
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+li {
+    margin: 0 10px;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+#categorias {
+    margin: 0px;
+    padding: 0px;
+    max-width: 100%;
+}
+
+.popover {
+    max-width: 280px;
+}
+
+#SearchLogin {
+    padding-top: 10px;
+    margin-right: 60px;
+}
+
+.searchBar {
+    display: flex;
+}
+
+.busqueda {
+    width: 80px;
+    border-radius: 0px 25px 25px 0px;
+    border: 1px solid #bdbdbd23;
+    background-color: #ed9b43d2;
+}
+
+.barraBusqueda {
+    width: 100%;
+    border-radius: 25px 0px 0px 25px;
+    border: 1px solid #bdbdbd23;
+    background-color: #fef4e9d2;
+}
+
+.SearchHead {
+    /*background-color: #a8eebad2;*/
+    background: linear-gradient(45deg, #f28d21d2, #ffda08f1);
+}
+
+.categorias {
+    background: linear-gradient(45deg, #f28d21d2, #ffda08f1);
+}
+
+.nosotros {
+    text-align: justify;
+}
+
+.mision {
+    padding-left: 20%;
+    padding-right: 20%;
+    text-align: justify;
+}
+
+
+/* Pago rechazado */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 65vh;
+}
+
+.card {
+    width: 100%;
+    max-width: 600px;
+    margin: 0;
+    padding: 15px;
+}
+
+.card-body {
+    text-align: center;
+}
+
+.card-header {
+    background-color: #ffcccc;
+    text-align: center;
+}
+
+.card-header h3 {
+    color: #990000;
+}
+
+.card-body p {
+    color: #990000;
+}
+
+.btn-danger {
+    background-color: #990000;
+    border-color: #990000;
+}
+
+.btn-danger:hover {
+    background-color: #cc0000;
+    border-color: #cc0000;
+}

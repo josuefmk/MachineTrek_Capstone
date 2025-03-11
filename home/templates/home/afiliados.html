@@ -1,0 +1,12 @@
+{% extends 'home/index.html' %} {% load static %} {%block content%} {%load mathfilters%} {% load humanize %}
+
+{% if afiliados %}
+    {% for afiliado in afiliados %}
+    <h2>yes</h2>
+    {%endfor%}
+{% else %}
+<div class="container d-flex justify-content-center"><h1>No hay afiliados registrados</h1></div>
+    
+{% endif %}
+
+{%endblock%}

@@ -1,0 +1,124 @@
+{% extends 'home/index.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+    {% if messages %}
+        <div class="alert-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <form method="POST" class="formulario">
+        {% csrf_token %}
+        <h2 class="form-heading">Actualizar Información</h2>
+        {{ u_form.as_p }}
+        
+        <!-- Campo para RUT si el usuario no lo ha ingresado -->
+        {% if not p_form.instance.rut %}
+            <div class="form-group">
+                <label for="id_rut">RUT:</label>
+                <input type="text" name="rut" id="id_rut" class="form-control" required>
+            </div>
+        {% endif %}
+        
+        <button type="submit" name="update_info" class="btn btn-warning">Actualizar Información</button>
+    </form>
+
+    <hr>
+
+    <form method="POST" class="formulario">
+        {% csrf_token %}
+        <h2 class="form-heading">Añadir Dirección</h2>
+        {{ direccion_form.as_p }}
+        <button type="submit" name="add_direccion" class="btn btn-warning">Añadir Dirección</button>
+    </form>
+
+    <hr>
+    
+    <form method="POST" class="formulario">
+        {% csrf_token %}
+        <h2 class="form-heading">Añadir Empresa</h2>
+        {{ empresa_form.as_p }}  
+        <button type="submit" name="add_empresa" class="btn btn-warning">Añadir Empresa</button>
+    </form>
+
+    <hr>
+
+    <form method="POST" class="formulario">
+        {% csrf_token %}
+        <h2 class="form-heading">Cambiar Contraseña</h2>
+        {{ password_form.as_p }}
+        <button type="submit" name="change_password" class="btn btn-warning">Cambiar Contraseña</button>
+    </form>
+
+    <hr>
+    
+    <div class="direcciones-empresas">
+        <h2>Tus Direcciones</h2>
+        <ul class="list-direcciones">
+            {% for direccion in direcciones %}
+                <li class="item">
+                    {{ direccion.direccion }}
+                    <form method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="direccion_id" value="{{ direccion.id }}">
+                        <button type="submit" name="delete_direccion" class="btn btn-warning pad">Eliminar Dirección</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="item">No tienes direcciones registradas.</li>
+            {% endfor %}
+        </ul>
+    
+        <h2>Tus Empresas</h2>
+        <ul class="list-empresas">
+            {% for empresa in empresas %}
+                <li class="item">
+                    {{ empresa.nombre }} - {{ empresa.direccion }}
+                    <form method="POST" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="empresa_id" value="{{ empresa.id }}">
+                        <button type="submit" name="delete_empresa" class="btn btn-warning pad">Eliminar Empresa</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="item">No tienes empresas registradas.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<script type="application/json" id="regiones-comunas">
+    {{ REGIONES_COMUNAS|json_script:"regiones_comunas" }}
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const regionSelect = document.querySelector('select[name="regionEmpresa"]');
+        const comunaSelect = document.querySelector('select[name="comunaEmpresa"]');
+
+        regionSelect.addEventListener('change', function() {
+            const selectedRegion = this.value;
+            comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>'; 
+
+            fetch(`/comunas/${selectedRegion}/`)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(comuna => {
+                        const option = document.createElement('option');
+                        option.value = comuna.id; // o el campo que uses para el valor
+                        option.textContent = comuna.nombre; // o el campo que uses para el nombre
+                        comunaSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error al cargar las comunas:", error));
+        });
+    });
+</script>
+
+{% endblock %}

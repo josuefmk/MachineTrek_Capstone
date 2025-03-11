@@ -1,0 +1,99 @@
+{% extends 'home/index.html' %} {% load static %} {%block content%} {% load humanize %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/pago_exitoso.css' %}">
+
+<div class="container"> 
+    <div class="row"> 
+        <div class="col-md-12">
+             <div class="card"> 
+                <div class="card-header">
+                    <h3> Pago exitoso </h3> 
+                </div> 
+                <!--Es necesario actualizar valores desde base de datos-->
+                <div class="card-body">
+                    <p style="font-weight: bold; font-size: 1.1em;">Su pago ha sido exitoso.</p> 
+                    <!-- Detalles de la orden -->
+                    <h2>Detalles de la Orden</h2>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Número de Orden:</strong> {{orden.transaction_id}}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Precio de Producto/s:</strong> ${{trans.monto|intcomma}}
+                        {% for item in items %}
+                        <div style="margin-bottom: 10px;">
+                            <strong>Producto:</strong> {{item.idProducto.nombre}} ${{item.idProducto.precio|intcomma}}
+                        {% endfor %}
+                    </div>
+                    <div style="margin-bottom: 10px;">{% if orden.DireccionEnvio %}
+                        <strong>Costo Envío:</strong> {{ orden.DireccionEnvio.costoEnvio }}
+                    {% else %}
+                        <strong>Costo Envío:</strong> No se ha definido la dirección de envío.
+                    {% endif %}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Total a pagar:</strong> {{trans.monto|intcomma}}
+                    </div>
+
+                    <!-- Información de contacto -->
+                    <h2>Información de Contacto</h2>
+                    <p>Si tienes alguna pregunta sobre tu pedido, no dudes en contactarnos:</p>
+                    <div style="margin-bottom: 10px;">
+                    <strong>Teléfono:</strong> 555-1234
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                    <strong>Correo electrónico:</strong> info@miempresa.com
+                    </div>
+
+                    <!-- Información de envío -->
+                    <h2>Información de Envío</h2>
+                    <p>Tu pedido será enviado a la siguiente dirección:</p>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Nombre:</strong> {{orden.cliente.nombre}} {{orden.cliente.apellido}}
+                    </div>
+                    {% if orden.DireccionEnvio %}
+                    <div style="margin-bottom: 10px;">
+                        <strong>Dirección:</strong> {{ orden.DireccionEnvio.calle }} {{ orden.DireccionEnvio.numero }}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Ciudad:</strong> {{ orden.DireccionEnvio.comuna }}, {{ orden.DireccionEnvio.region }}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Costo Envío:</strong> {{ orden.DireccionEnvio.costoEnvio }}
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <strong>Estado:</strong> {{orden.DireccionEnvio.estado}}
+                    </div>
+                    {% else %}
+                    <div style="margin-bottom: 10px;">
+                        <strong>Dirección:</strong> No se ha definido la dirección de envío.
+                    {% endif %}
+                    </div>
+
+                    <!-- Opciones de seguimiento de la orden -->
+                    <h2>Seguimiento de la Orden</h2>
+                    <p>Puedes seguir el estado de tu pedido en nuestro sitio web:</p>
+                    <a href="#">Ver Estado de la Orden</a>
+
+
+                    <!-- Opciones de compartir en redes sociales -->
+                    <h2>Comparte tu Experiencia</h2>
+                    <p>¿Te gustó tu experiencia de compra? ¡Comparte con tus amigos y familiares en las redes sociales!</p>
+                    <ul>
+                    <li><a href="#">Compartir en Facebook</a></li>
+                    <li><a href="#">Compartir en Twitter</a></li>
+                    <li><a href="#">Compartir en Instagram</a></li>
+                    </ul>
+
+                    <!-- Ofertas especiales -->
+                    <h2>¡Aprovecha Nuestras Ofertas Especiales!</h2>
+                    <p>Como agradecimiento, obtén un 10% de descuento en tu próxima compra:</p>
+                    <p>Código de Descuento: <strong>GRACIAS10</strong></p>
+                </div> 
+
+                
+            </div> 
+        </div>
+    </div> 
+</div>
+
+{% endblock %}

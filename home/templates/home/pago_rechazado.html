@@ -1,0 +1,21 @@
+{% extends 'home/index.html' %} {% load static %} {%block content%}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/pago_rechazado.css' %}">
+
+<div class="container">
+    <div class="row"> 
+        <div class="col-md-12"> 
+            <div class="card"> 
+                <div class="card-header"> 
+                    <h3> Pago Rechazado </h3> 
+                </div> 
+                <div class="card-body"> 
+                    <p> Su pago ha sido rechazado. Por favor, revise la información de pago e inténtelo de nuevo. </p>
+                    <a href="{% url 'carrito' %}" class="btn btn-danger">Volver al carrito</a> 
+                </div> 
+            </div> 
+        </div> 
+    </div> 
+</div>
+
+{% endblock %}

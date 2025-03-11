@@ -1,0 +1,75 @@
+{% extends 'home/index.html' %} {% load static %} {%block content%}
+
+<div id="myCarousel" class="carousel slide colorletra" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img class="d-block w-100" src="{%static 'home/img/MAQUINA3.png'%}" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false" alt="Slide 1 Image">
+      <div class="container">
+        <div class="carousel-caption text-center">
+          <h1>Arrienda con nosotros</h1>
+          <h5>MachineTrek</h5>
+          <p><a class="btn btn-lg btn-warning" href="{% url 'tienda' %}">Ver más</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="{%static 'home/img/MAQUINA4.png'%}" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false" alt="Slide 2 Image">
+      <div class="container">
+        <div class="carousel-caption text-center">
+          <h1>Arriendo</h1>
+          <h4>Excavadoras, Rodillos, Equipo de pavimentos y más</h4>
+          <p><a class="btn btn-lg btn-warning" href="{% url 'tienda' %}">Ver más</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img class="d-block w-100" src="{%static 'home/img/MAQUINA5.png'%}" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false" alt="Slide 3 Image">
+      <div class="container">
+        <div class="carousel-caption text-center">
+          <h1>En el carro de compra</h1>
+          <h5>Puedes arrendar más de 2 maquinarias pesadas.</h5>
+          <p><a class="btn btn-lg btn-warning" href="{% url 'tienda' %}">Ver más</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#myCarousel"  data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+</div>
+  <!--Mejores vendedores-->
+
+<div class="container marketing">
+
+  <!-- Three columns of text below the carousel -->
+  {% if maquinarias %}
+  <div class="row">
+     <h2 class="text-center" >Últimas Maquinarias!</h2>
+     <br>
+     <br>
+     <br>
+  {% for maquinaria in maquinarias %}
+    <div class="col-lg-4 align">
+      <img class="bd-img rounded-circle float-none" width="140" height="140" src="{{maquinaria.imagen.imagen.url}}" alt="Generic placeholder image" preserveAspectRatio="xMidYMid slice" focusable="false">
+      <h2 class="fw-normal">{{maquinaria.nombre}}</h2>
+      <p>{{maquinaria.vendedor}}</p>
+      <p><a class="btn btn-lg btn-warning" >Arrendar</a></p>
+    </div><!-- /.col-lg-4 -->
+  {% endfor %}
+  </div><!-- /.row -->
+  {% endif %}
+</div>
+
+
+  {% endblock %}

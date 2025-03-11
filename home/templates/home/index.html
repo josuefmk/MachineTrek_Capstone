@@ -1,0 +1,263 @@
+{% load static%}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-MS92GM76');</script>
+    <!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <!-- HTML Meta Tags -->
+    <title>MachineTrek | Arriendo Fácil</title>
+    <meta name="description" content="MachineTrek es una plataforma que busca democratizar el arriendo de vehículos y maquinarias, con la finalidad de otorgar más facilidades a las pequeñas y medianas empresas.">
+
+    <!-- Google / Search Engine Tags -->
+    <meta itemprop="name" content="MachineTrek | Arriendo Fácil">
+    <meta itemprop="description" content="MachineTrek es una plataforma que busca democratizar el arriendo de vehículos y maquinarias, con la finalidad de otorgar más facilidades a las pequeñas y medianas empresas.">
+    <meta itemprop="image" content="">
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="https://tecafondo.cl">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="MachineTrek | Arriendo Fácil">
+    <meta property="og:description" content="MachineTrek es una plataforma que busca democratizar el arriendo de vehículos y maquinarias, con la finalidad de otorgar más facilidades a las pequeñas y medianas empresas.">
+    <meta property="og:image" content="">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="MachineTrek | Arriendo Fácil">
+    <meta name="twitter:description" content="MachineTrek es una plataforma que busca democratizar el arriendo de vehículos y maquinarias, con la finalidad de otorgar más facilidades a las pequeñas y medianas empresas.">
+    <meta name="twitter:image" content="">
+
+    <!-- Meta Tags Generated via http://heymeta.com -->
+
+    <meta name="author" content="TecaFondo">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Final Meta tags-->
+    <link rel="shortcut icon" src="{%static 'home/img/Logo.png'%}" type="image/x-icon">
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css' />
+    <link rel="icon" type="image/x-icon" href="static/img/Logo.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/730a1d76c6.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <!-- Flatpickr JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <link rel="stylesheet" type="text/css" href="{%static 'home/css/estilo.css'%}">
+    <script src="{% static 'home/js/script.js'%}" defer></script>
+    <script src="{% static 'home/js/cart.js' %}" defer></script>
+    <script src="{% static 'home/js/csrfTokenScript.js'%}" async></script>
+    <script src="{% static 'home/js/form_check.js'%}" ></script>
+ 
+
+    <link rel="icon" type="image/x-icon" href="{% static 'home/img/Logo.png' %}">
+
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MS92GM76"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    <!--Barra de busqueda y login-->
+    <header class="SearchHead">
+        <div class="container-fluid d-grid align-items-center" style="grid-template-columns: 1fr 4fr;">
+            <div class="dropdown">
+              <img src="{% static '/home/img/Logo.png'%}" alt="" width="50" height="50">
+              <h2>MachineTrek</h2>
+                
+            </a>
+            
+            </div>
+    
+            <div class="d-flex align-items-center" id="SearchLogin">
+            <form class="w-100 me-3 searchBar" role="search" method="GET" action="{% url 'busqueda' %}">
+                <input type="search" class="form-control barraBusqueda" placeholder="Buscar..." aria-label="Search" name="query">
+                <button class="busqueda" id="buscar"  type="submit" ><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+    
+            <div class="flex-shrink-0 dropdown">
+                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-user rounded-circle"></i>
+                </a>
+                <ul class="dropdown-menu text-small shadow">
+                    {% if user.is_authenticated %}
+                    <li><a class="dropdown-item" href="{% url 'misProductos'%}">Mis Productos</a></li>
+                    <li><a class="dropdown-item" href="{% url 'perfil' %}">Editar Perfil</a></li>
+                   <li> <a class="dropdown-item" href="{% url 'misArriendos' %}" onclick="showLoadingSwal()">Mis Arriendos</a></li>
+                    <li><a class="dropdown-item" href="{% url 'dashboard' %}" onclick="showLoadingSwal()">Dashboard</a></li>
+                    {% if user.is_staff or user.is_superuser %}
+                    <li><a class="dropdown-item" href="{% url 'dashboard_admin'%}" onclick="showLoadingSwal()">Admin Dashboard</a></li>
+                    {% endif %}
+                    <script>
+                    function showLoadingSwal() {
+                      Swal.fire({
+                        title: 'Cargando...',
+                        text: 'Por favor, espere.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                          Swal.showLoading();
+                        }
+                      });
+                    }
+                    </script>
+                    <li><a class="dropdown-item" href="{% url 'userlogout'%}">Cerrar Sesion</a></li>
+                    {% else %}
+                    <li><a class="dropdown-item" href="{% url 'userlogin'%}">Iniciar Sesion</a></li>
+                    <li><a class="dropdown-item" href="{% url 'registro'%}">Crear Usuario</a></li>
+                    {% endif %}
+                </ul>
+                </div>
+                <div class="flex-shrink-0 dropdown">
+                  <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa-solid fa-cart-shopping"class="rounded-circle"></i>
+                  </a>
+                  <ul class="dropdown-menu text-small shadow">
+                      <li><a class="dropdown-item" href="{% url 'carrito' %}">Ver Carrito</a></li>
+                      {% if user.is_authenticated %}
+                      <li><a class="dropdown-item" href="{% url 'pago' %}">Check-out</a></li>
+                      {% else %}
+                      <li><a class="dropdown-item" href="{% url 'userlogin'%}">Check-out</a></li>
+                      {% endif %}
+                  </ul>
+                
+                </div>
+
+                
+                <div id="cart-action" data-url="{% url 'add_to_cart' %}"><div class="flex-shrink-0 dropdown">
+                  {% if user.is_authenticated %}
+                  <p id="cart-total" data-login="true">{{cartItems}}</p>
+                  {% else %}
+                  <p id="cart-total" data-login="false">{{cartItems}}</p>
+                  {% endif %}
+                  
+                </div></div>
+
+          </div>
+        </div>
+    </header>
+    <!--Barra de navegación-->
+    <nav class="navbar navbar-expand-lg navbar-light categorias" aria-label="Tenth navbar example">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="naveMenu" aria-controls="navegacion" aria-expanded="false" aria-label="Toggle navigation" onclick="openNav()">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-md-center" id="naveMenu">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'index'%}">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link"  href="{% url 'afiliados'%}">Nuestros afiliados</a>
+                  </li>
+                <li class="nav-item">
+                <a class="nav-link" href="{% url 'tienda'%}">Tienda</a>
+                </li>
+             
+            </ul>
+            </div>
+        </div>
+    </nav>
+    <!--Contenido, muestra de productos, etc...-->
+    <main>
+        {% block content %}
+        {% endblock content %}
+    </main>
+    <!--Footer-->
+    <div class="container">
+        <footer class="py-5">
+          <div class="row">
+
+            <div class="col-6 col-md-2 mb-3">
+              <h5>Afiliados</h5>
+              <ul class="nav flex-column">
+
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Beneficios</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Tarifas</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Más Info</a></li>
+              </ul>
+            </div>
+      
+            <div class="col-6 col-md-2 mb-3">
+              <h5>MachineTrek</h5>
+              <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="{%url 'index'%}" class="nav-link p-0 text-muted">Home</a></li>
+                <li class="nav-item mb-2"><a href="{%url 'nosotros'%}" class="nav-link p-0 text-muted">Nosotros</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
+                <li class="nav-item mb-2"><a href="{%url 'preguntas_frecuentes'%}" class="nav-link p-0 text-muted">Preguntas Frecuentes</a></li>
+                <li class="nav-item mb-2"><a href="{%url 'atencion_cliente'%}" class="nav-link p-0 text-muted">Soporte</a></li>
+              </ul>
+            </div>
+      
+            <div class="col-6 col-md-2 mb-3">
+              <h5>Section</h5>
+              <ul class="nav flex-column">
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Features</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">Pricing</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">FAQs</a></li>
+                <li class="nav-item mb-2"><a href="#" class="nav-link p-0 text-muted">About</a></li>
+              </ul>
+            </div>
+      
+            <div class="col-md-5 offset-md-1 mb-3">
+              <form>
+                <h5>Suscríbete al Mailing</h5>
+                <p>Obtén las últimas ofertas y novedades en la plataforma.</p>
+                <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                  <label for="newsletter1" class="visually-hidden">Correo</label>
+                  <input id="newsletter1" type="text" class="form-control" placeholder="Correo Electrónico">
+                  <button class="btn btn-lg btn-warning" type="button">Suscribirse</button>
+                </div>
+              </form>
+            </div>
+          </div>
+      
+          <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+            <p>&copy; 2023 MachineTrek, Inc. All rights reserved.</p>
+            <ul class="list-unstyled d-flex">
+              <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"/></svg></a></li>
+              <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"/></svg></a></li>
+              <li class="ms-3"><a class="link-dark" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"/></svg></a></li>
+            </ul>
+          </div>
+
+        </footer>
+      </div>
+</body>
+<script>
+  window.onload=function() {
+  var eliminarBtns = document.querySelectorAll('.eliminarBtn');
+  var productoValorSpan = document.getElementById('productoValor');
+
+  eliminarBtns.forEach(function(eliminarBtn) {
+      
+      eliminarBtn.addEventListener('click', function() {
+          
+          var producto = eliminarBtn.getAttribute('data-producto');
+          let valor = producto;
+          let boton = document.getElementById('confirmarEliminarProducto');
+          console.log(valor.toString());
+          valor=valor.toString();
+          let urlEliminar = '/eliminar_producto/'+valor.toString() +'/';
+          console.log(urlEliminar);
+          boton.href = (urlEliminar);
+          productoValorSpan.textContent = producto;
+      });
+  });
+
+};
+</script>
+</html>

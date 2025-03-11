@@ -1,0 +1,11 @@
+{% extends 'home/index.html' %} {% load static %} {% block content %}
+<div class="container">
+    <h2>Modificar Producto</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Esto mostrará el formulario con los datos actuales -->
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <a href="{% url 'index' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

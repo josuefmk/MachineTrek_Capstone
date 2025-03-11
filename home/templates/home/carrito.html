@@ -1,0 +1,140 @@
+{% extends 'home/index.html' %} {% load static %} {%block content%} {%load mathfilters%} {% load humanize %}
+
+<!--boton de pago-->
+<div class="container">
+<form method="POST" action="{% url 'carrito' %}">
+  <br>
+  <br>
+  <br>
+  {% if items %}
+  {% for item in items %}
+  <div class="container container-carro" data-producto="{{ item.idProducto.VIN }}">
+    
+    <div class="row cart-item" data-producto="{{ item.idProducto.VIN }}">
+      {% if item.idProducto.imagen == "" or item.idProducto.imagen == None %}
+      <div class="col-md-4 col-sm-6 imagenresponsive">
+          <img src='{{item.idProducto.imagenURL}}' alt="Imagen" class="card-img-top img-fluid" />
+      </div>
+      {% else %}
+      <div class="col-md-4 col-sm-6 imagenresponsive">
+          <img src='{{item.idProducto.imagen}}' alt="Imagen" class="card-img-top img-fluid" />
+      </div>
+      {% endif %}
+      <section class="col-md-8 col-sm-6 carro">
+          <div class="container">
+              <div class="cart-row row">
+                <div class="col-12 col-sm-6">
+                    <div class="d-flex flex-column align-items-center">
+                        <strong>Nombre</strong>
+                        <p>{{item.idProducto.nombre}}</p>
+                    </div>
+                </div>
+                  <div class="col-12 col-sm-6">
+                      <div class="d-flex flex-column align-items-center">
+                          <strong>Nombre Vendedor</strong>
+                          <p>{{item.idProducto.vendedor}}</p>
+                      </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                    <div class="d-flex flex-column align-items-center">
+                        <strong>Fecha de Inicio</strong>
+                        {% if item.idProducto.fecha_inicio %}
+                        <p>{{ item.idProducto.fecha_inicio}}</p>
+                        {% else %}
+                        <p>{{item.fecha_inicio}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <div class="d-flex flex-column align-items-center">
+                        <strong>Fecha de Termino</strong>
+                        {% if item.idProducto.fecha_termino %}
+                        <p>{{item.idProducto.fecha_termino}}</p>
+                        {% else %}
+                        <p>{{item.fecha_termino}}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                  <div class="col-12 col-sm-6">
+                      <div class="d-flex flex-column align-items-center">
+                          <strong>Valor Diario</strong>
+                          <p>${{item.idProducto.precio|intcomma}}</p>
+                      </div>
+                  </div>
+                  {% if item.idProducto.descuento > 0 %}
+                  <div class="col-12 col-sm-6">
+                      <div class="d-flex flex-column align-items-center">
+                          <strong>Descuento</strong>
+                          <p>{{item.idProducto.descuento}}</p>
+                      </div>
+                  </div>
+                  {% endif %}
+                  <div class="col-12 col-sm-6">
+                      <div class="d-flex flex-column align-items-center">
+                          <strong>Costo Envío</strong>
+                          {% if item.idProducto.costoEnvio == 0 %}
+                          <p>Gratis</p>
+                          {% else %}
+                          <p>${{item.idProducto.costoEnvio|floatformat:0|intcomma}}</p>
+                          {% endif %}
+                      </div>
+                  </div>
+                  <div class="col-12 col-sm-6">
+                      <div class="d-flex flex-column align-items-center">
+                          <strong>Total</strong>
+                          {% if request.user.is_authenticated %}
+                            <p>{{ item.idProducto.precio | mul:item.dias |add:item.idProducto.costoEnvio|intcomma }}</p>
+                            <div class="container fluid" id="modificarStockCarrito">
+                                <button data-producto="{{item.idProducto}}" data-action="add" data-usuario="{{request.user}}" class="btn btn-warning btn-lg tn-block add-button editar-carrito modificar-carrito">+</button>
+                                <button data-producto="{{item.idProducto}}" data-action="remove" data-usuario="{{request.user}}" class="btn btn-warning btn-lg tn-block add-button editar-carrito modificar-carrito">-</button>
+                            </div>
+                          {% else %}
+                              <p>${{ item.idProducto.precio | mul:item.idProducto.dias |add:item.idProducto.costoEnvio|intcomma }}</p>
+                              <div class="container fluid" id="modificarStockCarrito">
+                                  <button data-producto="{{item.idProducto.VIN}}" data-inicio="{{item.idProducto.fecha_inicio}}" data-termino="{{item.idProducto.fecha_termino}}" data-action="add" data-usuario="{{request.user}}" class="btn btn-warning btn-lg tn-block add-button editar-carrito modificar-carrito">+</button>
+                                  <button data-producto="{{item.idProducto.VIN}}" data-inicio="{{item.idProducto.fecha_inicio}}" data-termino="{{item.idProducto.fecha_termino}}" data-action="remove" data-usuario="{{request.user}}" class="btn btn-warning btn-lg tn-block add-button editar-carrito modificar-carrito">-</button>
+                              </div>
+                          {% endif %}
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </section>
+    </div>
+
+  
+  </div>
+  {% endfor%}
+  <div class="d-flex flex-row-reverse">
+    <div class="d-flex flex-column align-items-end">
+        <p>Subtotal: ${{order.get_cart_total|intcomma}}</p>
+        <p>Tarifa de Servicio: ${{order.get_comision_total|intcomma}}</p>
+        <strong>Total carrito: ${{total|intcomma}}</strong>
+    </div>
+    
+  </div>
+  {% else %}
+  <div class="container">   
+     <div class="row">
+    <div class="col-12 text-center">
+      <h3 class="cart-name">No hay nada en el Carrito</h3>
+    </div>
+  </div>
+</div>
+{% endif %}
+<div class="col-12 col-sm-12 text-center boton-pago">
+  {% if items %}
+  <!-- No separar el token del botón -->
+  
+  <form method="POST" action="{% url 'carrito' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning btn-lg" data-toggle="modal" value="pago" name="pago" data-target="#exampleModal">Pagar</button>
+  </form>
+  
+  {% endif %}
+</div>
+</form>
+</div>
+{%endblock%}
+
+

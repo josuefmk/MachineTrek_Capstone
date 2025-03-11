@@ -1,0 +1,37 @@
+{% extends 'home/index.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/css/atencion_cliente.css' %}">
+
+<div class="main-container">
+    <div class="header">
+        <h1>Centro de Soporte</h1>
+        <p>Encuentra asistencia y recursos para el uso de nuestra maquinaria pesada.</p>
+    </div>
+
+    <div class="videos-section">
+        <h2>Guías en Video</h2>
+        <p class="coming-soon">Próximamente: Explora nuestros videos para obtener instrucciones detalladas sobre el uso y mantenimiento de maquinaria.</p>
+    </div>
+
+    <div class="contact-section">
+        <h2>¿Necesitas asistencia personalizada?</h2>
+        <p>Si tienes alguna consulta o necesitas ayuda específica, estamos aquí para ayudarte.</p>
+        <button class="contact-button" onclick="toggleContactForm()">Contáctanos</button>
+
+        <div id="contactForm" class="contact-form" style="display: none;">
+            <p>Envía tu consulta a nuestro equipo de soporte por correo o llama directamente:</p>
+            <p><strong>Email:</strong> soporte@xxxxx.com</p>
+            <p><strong>Teléfono:</strong> +569 xxxxxxxx</p>
+            <textarea placeholder="Escribe tu consulta aquí..."></textarea>
+            <div class="button-container">
+                <button type="submit">Enviar Consulta</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'home/js/atencion_cliente.js' %}"></script>
+
+{% endblock %}
